@@ -1,111 +1,106 @@
-import { ChevronDown, Sparkles } from "lucide-react";
+"use client";
+
+import { useEffect, useRef } from "react";
+import { gsap } from "gsap";
+import { SplitText } from "gsap/SplitText";
+import { ArrowDown, ArrowUpRight } from "lucide-react";
+import ZelligeCanvas from "./ZelligeCanvas";
+import { onReady } from "./Preloader";
+import { prefersReducedMotion } from "./Motion";
 
 export default function Hero() {
+  const root = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (prefersReducedMotion()) return;
+    const el = root.current!;
+    const ctx = gsap.context(() => {
+      gsap.set("[data-hero-fade]", { autoAlpha: 0, y: 24 });
+      const split = SplitText.create("[data-hero-title]", { type: "lines", mask: "lines" });
+      gsap.set(split.lines, { yPercent: 115 });
+
+      // the headline drifts up and the wall darkens as you scroll away
+      gsap.to("[data-hero-copy]", {
+        yPercent: -18,
+        ease: "none",
+        scrollTrigger: { trigger: el, start: "top top", end: "bottom top", scrub: true },
+      });
+      gsap.to("[data-hero-veil]", {
+        opacity: 0.85,
+        ease: "none",
+        scrollTrigger: { trigger: el, start: "top top", end: "bottom top", scrub: true },
+      });
+
+      const off = onReady(() => {
+        gsap
+          .timeline({ defaults: { ease: "expo.out" } })
+          .to(split.lines, { yPercent: 0, duration: 1.5, stagger: 0.12 })
+          .to("[data-hero-fade]", { autoAlpha: 1, y: 0, duration: 1.2, stagger: 0.08 }, 0.35);
+      });
+      return off;
+    }, el);
+    return () => ctx.revert();
+  }, []);
+
   return (
     <section
+      ref={root}
       id="accueil"
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden"
-      style={{ background: "linear-gradient(160deg, #2C1A0E 0%, #7A1515 40%, #9C3D1A 70%, #C4603B 100%)" }}
+      className="relative isolate flex min-h-[100svh] flex-col justify-end overflow-hidden bg-manganese text-chaux"
+      data-cursor
     >
-      {/* Zellige background pattern */}
-      <div className="absolute inset-0 zellige-bg opacity-30 pointer-events-none" />
+      <div className="absolute inset-0 -z-10">
+        <ZelligeCanvas />
+      </div>
+      {/* legibility veils: bottom fade for the copy, scroll-driven darkening */}
+      <div className="pointer-events-none absolute inset-0 -z-10 bg-gradient-to-t from-manganese via-manganese/55 to-transparent" />
+      <div data-hero-veil className="pointer-events-none absolute inset-0 -z-10 bg-manganese opacity-0" />
 
-      {/* Decorative corner ornaments */}
-      <OrnamentSVG className="absolute top-6 left-6 opacity-30 w-16 h-16 text-gold" />
-      <OrnamentSVG className="absolute top-6 right-6 opacity-30 w-16 h-16 text-gold rotate-90" />
-      <OrnamentSVG className="absolute bottom-24 left-6 opacity-20 w-12 h-12 text-gold rotate-180" />
-      <OrnamentSVG className="absolute bottom-24 right-6 opacity-20 w-12 h-12 text-gold -rotate-90" />
+      <div
+        data-hero-copy
+        className="mx-auto grid w-full max-w-[1500px] gap-10 px-[var(--gutter)] pb-10 pt-40 md:grid-cols-12 md:pb-14"
+      >
+        <div className="md:col-span-8">
+          <p data-hero-fade className="eyebrow mb-6 flex items-center gap-3 text-miel">
+            <span className="h-px w-10 bg-miel" />
+            Maison d&apos;artisanat marocain · Fès
+          </p>
+          <h1 data-hero-title className="display text-[clamp(3.3rem,10.5vw,10.5rem)]">
+            L&apos;âme des mains
+            <br />
+            <em className="text-miel">marocaines</em>
+          </h1>
+        </div>
 
-      {/* Arch frame */}
-      <div className="relative z-10 flex flex-col items-center px-6 max-w-3xl mx-auto text-center">
-        {/* Decorative arch top */}
-        <div className="mb-8">
-          <div className="inline-flex items-center gap-3 text-gold-light text-sm font-body tracking-[0.4em] uppercase">
-            <span className="w-8 h-px bg-gold-light/60" />
-            <Sparkles size={14} />
-            <span>Fait à la main au Maroc</span>
-            <Sparkles size={14} />
-            <span className="w-8 h-px bg-gold-light/60" />
+        <div className="flex flex-col justify-end gap-8 md:col-span-4 md:pb-4">
+          <p data-hero-fade className="arabic text-3xl text-chaux/80 md:text-right">
+            صُنع بأيادٍ مغربية
+          </p>
+          <p data-hero-fade className="max-w-sm text-base leading-relaxed text-chaux/75">
+            Zellige taillé au menqach, tapis noués dans l&apos;Atlas, poteries de Safi et argent de
+            Tiznit. Nous travaillons directement avec plus de cinquante maâlems, et chaque pièce
+            arrive avec l&apos;histoire de ses mains.
+          </p>
+          <div data-hero-fade className="flex flex-wrap gap-3">
+            <a href="#collection" className="btn btn-light" data-magnetic>
+              Voir la collection <ArrowUpRight size={18} />
+            </a>
+            <a href="#atelier" className="btn btn-ghost text-chaux" data-magnetic>
+              Composer un zellige
+            </a>
           </div>
         </div>
-
-        {/* Arabic calligraphy ornament */}
-        <div className="text-gold/60 text-4xl mb-4 font-heading">❧</div>
-
-        {/* Main heading */}
-        <h1 className="font-heading text-5xl sm:text-6xl md:text-7xl font-bold text-cream leading-tight mb-4">
-          ARTIZANA
-        </h1>
-
-        <div className="moroccan-divider w-48 mx-auto mb-6">
-          <span className="text-gold text-xl">✦</span>
-        </div>
-
-        <p className="font-body text-xl sm:text-2xl text-cream/80 mb-4 font-light italic">
-          L&apos;art artisanal marocain authentique
-        </p>
-
-        <p className="font-body text-base text-cream/60 max-w-lg mb-10 leading-relaxed">
-          Djellabas brodées, tapis berbères, poteries de Fès et bijoux en argent —
-          chaque pièce porte en elle le savoir-faire ancestral de nos artisans.
-        </p>
-
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 items-center">
-          <a
-            href="#collections"
-            className="inline-flex items-center gap-2 bg-gold hover:bg-gold-light text-brown font-heading font-semibold text-base px-8 py-4 rounded-full transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-          >
-            Voir les collections
-          </a>
-          <a
-            href="#contact"
-            className="inline-flex items-center gap-2 border-2 border-cream/40 hover:border-cream text-cream font-body font-semibold text-base px-8 py-4 rounded-full transition-all duration-300 hover:bg-cream/10"
-          >
-            Nous contacter
-          </a>
-        </div>
       </div>
 
-      {/* Bottom arch wave */}
-      <div className="absolute bottom-0 left-0 right-0">
-        <svg viewBox="0 0 1440 80" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path
-            d="M0 80 L0 40 Q180 0 360 40 Q540 80 720 40 Q900 0 1080 40 Q1260 80 1440 40 L1440 80 Z"
-            fill="#FDF6EC"
-          />
-        </svg>
+      <div className="mx-auto flex w-full max-w-[1500px] items-center justify-between border-t border-chaux/15 px-[var(--gutter)] py-5 text-chaux/60">
+        <p data-hero-fade className="eyebrow hidden sm:block">
+          Déplacez la lanterne · cliquez pour changer l&apos;émail
+        </p>
+        <p data-hero-fade className="eyebrow sm:hidden">Touchez le mur pour changer l&apos;émail</p>
+        <a href="#metiers" data-hero-fade className="eyebrow flex items-center gap-2 hover:text-miel" aria-label="Défiler vers les métiers">
+          Défiler <ArrowDown size={14} className="animate-bounce" />
+        </a>
       </div>
-
-      {/* Scroll indicator */}
-      <a
-        href="#collections"
-        className="absolute bottom-10 left-1/2 -translate-x-1/2 text-cream/50 hover:text-cream transition-colors animate-bounce"
-        aria-label="Défiler vers le bas"
-      >
-        <ChevronDown size={28} />
-      </a>
     </section>
-  );
-}
-
-function OrnamentSVG({ className }: { className?: string }) {
-  return (
-    <svg
-      viewBox="0 0 60 60"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
-    >
-      <polygon
-        points="30,2 36,22 56,22 40,34 46,54 30,42 14,54 20,34 4,22 24,22"
-        stroke="currentColor"
-        strokeWidth="1.5"
-        fill="none"
-      />
-      <circle cx="30" cy="30" r="6" stroke="currentColor" strokeWidth="1" fill="none" />
-      <line x1="30" y1="2" x2="30" y2="10" stroke="currentColor" strokeWidth="1" />
-      <line x1="30" y1="50" x2="30" y2="58" stroke="currentColor" strokeWidth="1" />
-    </svg>
   );
 }
