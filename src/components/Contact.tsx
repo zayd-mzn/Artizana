@@ -2,159 +2,129 @@
 
 import { useState, type FormEvent } from "react";
 import { MessageCircle, Phone, MapPin, Mail, Send, CheckCircle } from "lucide-react";
+import { whatsappLink } from "@/lib/whatsapp";
 
-const WHATSAPP_NUMBER = "212600000000";
+const field =
+  "w-full border-b border-chaux/25 bg-transparent py-3 text-lg text-chaux placeholder:text-chaux/30 transition-colors focus:border-miel focus:outline-none";
 
 export default function Contact() {
   const [form, setForm] = useState({ nom: "", telephone: "", message: "" });
   const [sent, setSent] = useState(false);
 
-  const whatsappHref = `https://wa.me/${WHATSAPP_NUMBER}?text=Bonjour%2C%20je%20souhaite%20vous%20contacter%20depuis%20votre%20site%20web.`;
-
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    const msg = encodeURIComponent(
-      `Bonjour !\n\nNom : ${form.nom}\nTéléphone : ${form.telephone}\n\nMessage :\n${form.message}`
+    window.open(
+      whatsappLink(`Bonjour !\n\nNom : ${form.nom}\nTéléphone : ${form.telephone}\n\nMessage :\n${form.message}`),
+      "_blank",
+      "noopener,noreferrer",
     );
-    window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${msg}`, "_blank");
     setSent(true);
     setForm({ nom: "", telephone: "", message: "" });
-    setTimeout(() => setSent(false), 5000);
+    setTimeout(() => setSent(false), 6000);
   };
 
   return (
-    <section
-      id="contact"
-      className="py-24 relative overflow-hidden"
-      style={{ background: "linear-gradient(135deg, #2C1A0E 0%, #7A1515 50%, #9C3D1A 100%)" }}
-    >
-      {/* Background pattern */}
-      <div className="absolute inset-0 zellige-bg opacity-20 pointer-events-none" />
-
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Header */}
-        <div className="text-center mb-14">
-          <p className="text-gold-light font-body text-sm tracking-[0.4em] uppercase mb-3">
-            Contactez-nous
-          </p>
-          <h2 className="font-heading text-4xl sm:text-5xl font-bold text-cream mb-4">
-            Parlons de votre commande
+    <section id="contact" className="relative overflow-hidden bg-cobalt-deep py-24 text-chaux md:py-32">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -right-40 -top-40 h-[640px] w-[640px] opacity-[0.12]"
+        style={{ backgroundImage: "url(/brand/artizana-mark-mono-light.svg)", backgroundSize: "contain", backgroundRepeat: "no-repeat" }}
+      />
+      <div className="relative mx-auto grid max-w-[1500px] gap-16 px-[var(--gutter)] lg:grid-cols-12">
+        <div className="lg:col-span-6">
+          <p className="eyebrow mb-6 text-miel">05 — Contact</p>
+          <h2 data-reveal="lines" className="display text-[clamp(2.8rem,6vw,6.5rem)]">
+            Parlons de <em className="text-miel">votre pièce</em>
           </h2>
-          <div className="moroccan-divider w-64 mx-auto">
-            <span className="text-gold text-xl px-2">✦</span>
-          </div>
+          <p data-reveal="fade" className="mt-8 max-w-md text-lg leading-relaxed text-chaux/70">
+            Une question, une dimension sur mesure, un zellige composé dans l&apos;Atelier ? Écrivez-nous
+            : nous répondons tous les jours, en français, en arabe ou en anglais.
+          </p>
+
+          <a
+            href={whatsappLink("Bonjour, je souhaite vous contacter depuis votre site web.")}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="group mt-12 flex items-center gap-5 rounded-[1.5rem] bg-whatsapp p-6 text-white transition-transform hover:-translate-y-1"
+            data-magnetic
+          >
+            <span className="grid h-14 w-14 place-items-center rounded-2xl bg-white/15">
+              <MessageCircle size={26} />
+            </span>
+            <span>
+              <span className="block font-display text-2xl">Commander via WhatsApp</span>
+              <span className="text-sm text-white/75">Réponse rapide, photos des pièces disponibles</span>
+            </span>
+            <span className="ml-auto text-2xl transition-transform group-hover:translate-x-1">→</span>
+          </a>
+
+          <ul className="mt-10 grid gap-6 sm:grid-cols-3">
+            {[
+              { icon: Phone, label: "Téléphone", value: "+212 6 00 00 00 00" },
+              { icon: Mail, label: "Email", value: "contact@artizana.ma" },
+              { icon: MapPin, label: "Atelier", value: "Médina de Fès" },
+            ].map(({ icon: Icon, label, value }) => (
+              <li key={label}>
+                <Icon size={18} className="text-miel" />
+                <p className="eyebrow mt-3 text-[0.62rem] text-chaux/50">{label}</p>
+                <p className="mt-1 font-medium">{value}</p>
+              </li>
+            ))}
+          </ul>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
-          {/* Left: Info */}
-          <div className="space-y-8 text-cream">
-            <p className="font-body text-lg text-cream/80 leading-relaxed">
-              Vous avez une question sur un produit ? Vous souhaitez une pièce sur mesure ?
-              Notre équipe est disponible tous les jours pour vous accompagner.
-            </p>
-
-            {/* WhatsApp CTA — primary */}
-            <a
-              href={whatsappHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-4 bg-[#25D366] hover:bg-[#1EB857] text-white px-6 py-5 rounded-2xl transition-colors shadow-xl group"
-            >
-              <div className="bg-white/20 rounded-xl p-3">
-                <MessageCircle size={28} />
-              </div>
-              <div>
-                <p className="font-heading font-bold text-lg">Commander via WhatsApp</p>
-                <p className="text-white/70 text-sm font-body">Réponse rapide garantie</p>
-              </div>
-              <span className="ml-auto group-hover:translate-x-1 transition-transform text-xl">→</span>
-            </a>
-
-            {/* Contact details */}
-            <div className="space-y-4">
-              {[
-                { icon: Phone, label: "Téléphone", value: "+212 6 00 00 00 00" },
-                { icon: Mail, label: "Email", value: "contact@artizana.ma" },
-                { icon: MapPin, label: "Adresse", value: "Medina de Fès, Maroc" },
-              ].map(({ icon: Icon, label, value }) => (
-                <div key={label} className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full border border-gold/40 flex items-center justify-center shrink-0">
-                    <Icon size={16} className="text-gold" />
-                  </div>
-                  <div>
-                    <p className="text-cream/40 text-xs font-body tracking-wide uppercase">{label}</p>
-                    <p className="text-cream font-body font-semibold">{value}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Right: Form */}
-          <div className="bg-cream/10 backdrop-blur-sm border border-cream/20 rounded-3xl p-8">
+        <div className="lg:col-span-5 lg:col-start-8" data-reveal="fade" data-reveal-delay="0.15">
+          <div className="rounded-[2rem] border border-chaux/15 bg-chaux/[0.04] p-8 backdrop-blur-sm md:p-10">
             {sent ? (
-              <div className="flex flex-col items-center justify-center py-12 text-center gap-4">
-                <CheckCircle size={48} className="text-[#25D366]" />
-                <h3 className="font-heading text-2xl font-bold text-cream">Message envoyé !</h3>
-                <p className="text-cream/70 font-body">
-                  WhatsApp s&apos;est ouvert avec votre message. Nous vous répondrons très bientôt.
+              <div className="flex flex-col items-center justify-center gap-4 py-16 text-center" role="status">
+                <CheckCircle size={48} className="text-miel" />
+                <h3 className="display text-4xl">Message prêt !</h3>
+                <p className="text-chaux/70">
+                  WhatsApp s&apos;est ouvert avec votre message. Envoyez-le, et nous vous répondrons très
+                  bientôt.
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <div>
-                  <label className="block text-cream/60 text-xs font-body tracking-wide uppercase mb-2">
-                    Votre nom *
-                  </label>
+              <form onSubmit={handleSubmit} className="flex flex-col gap-8">
+                <label className="block">
+                  <span className="eyebrow text-[0.62rem] text-chaux/60">Votre nom *</span>
                   <input
                     type="text"
                     required
+                    autoComplete="name"
                     value={form.nom}
                     onChange={(e) => setForm((f) => ({ ...f, nom: e.target.value }))}
                     placeholder="Mohammed Alami"
-                    className="w-full bg-white/10 border border-cream/20 text-cream placeholder:text-cream/30 rounded-xl px-4 py-3 font-body focus:outline-none focus:border-gold/60 focus:bg-white/15 transition-all"
+                    className={field}
                   />
-                </div>
-
-                <div>
-                  <label className="block text-cream/60 text-xs font-body tracking-wide uppercase mb-2">
-                    Téléphone *
-                  </label>
+                </label>
+                <label className="block">
+                  <span className="eyebrow text-[0.62rem] text-chaux/60">Téléphone *</span>
                   <input
                     type="tel"
                     required
+                    autoComplete="tel"
                     value={form.telephone}
                     onChange={(e) => setForm((f) => ({ ...f, telephone: e.target.value }))}
                     placeholder="+212 6XX XXX XXX"
-                    className="w-full bg-white/10 border border-cream/20 text-cream placeholder:text-cream/30 rounded-xl px-4 py-3 font-body focus:outline-none focus:border-gold/60 focus:bg-white/15 transition-all"
+                    className={field}
                   />
-                </div>
-
-                <div>
-                  <label className="block text-cream/60 text-xs font-body tracking-wide uppercase mb-2">
-                    Votre message *
-                  </label>
+                </label>
+                <label className="block">
+                  <span className="eyebrow text-[0.62rem] text-chaux/60">Votre message *</span>
                   <textarea
                     required
                     rows={4}
                     value={form.message}
                     onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
-                    placeholder="Décrivez le produit qui vous intéresse, la taille souhaitée, les couleurs..."
-                    className="w-full bg-white/10 border border-cream/20 text-cream placeholder:text-cream/30 rounded-xl px-4 py-3 font-body focus:outline-none focus:border-gold/60 focus:bg-white/15 transition-all resize-none"
+                    placeholder="La pièce qui vous intéresse, les dimensions, les couleurs…"
+                    className={`${field} resize-none`}
                   />
-                </div>
-
-                <button
-                  type="submit"
-                  className="w-full flex items-center justify-center gap-3 bg-gold hover:bg-gold-light text-brown font-heading font-bold text-base py-4 rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:-translate-y-0.5"
-                >
-                  <Send size={18} />
-                  Envoyer via WhatsApp
+                </label>
+                <button type="submit" className="btn btn-light justify-center text-base">
+                  <Send size={18} /> Envoyer via WhatsApp
                 </button>
-
-                <p className="text-center text-cream/40 text-xs font-body">
-                  Votre message sera envoyé directement sur WhatsApp
-                </p>
+                <p className="text-center text-xs text-chaux/40">Votre message s&apos;ouvre dans WhatsApp, prêt à envoyer.</p>
               </form>
             )}
           </div>

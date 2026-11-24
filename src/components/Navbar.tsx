@@ -1,124 +1,119 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Menu, X, MessageCircle } from "lucide-react";
+import Logo from "./Logo";
+import { whatsappLink } from "@/lib/whatsapp";
+import { getLenis } from "./Motion";
 
-const WHATSAPP_NUMBER = "212600000000";
-
-const navLinks = [
-  { label: "Accueil", href: "#accueil" },
-  { label: "Collections", href: "#collections" },
-  { label: "Catalogue", href: "#catalogue" },
-  { label: "À propos", href: "#a-propos" },
-  { label: "Contact", href: "#contact" },
+const links = [
+  { label: "Métiers", href: "#metiers", n: "01" },
+  { label: "Atelier", href: "#atelier", n: "02" },
+  { label: "Le geste", href: "#geste", n: "03" },
+  { label: "Collection", href: "#collection", n: "04" },
+  { label: "Contact", href: "#contact", n: "05" },
 ];
 
+const orderHref = whatsappLink("Bonjour, je souhaite passer une commande.");
+
 export default function Navbar() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > 60);
+    let last = window.scrollY;
+    const onScroll = () => {
+      const y = window.scrollY;
+      setScrolled(y > window.innerHeight * 0.85);
+      setHidden(y > last && y > 400);
+      last = y;
+    };
+    onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const whatsappHref = `https://wa.me/${WHATSAPP_NUMBER}?text=Bonjour%2C%20je%20souhaite%20passer%20une%20commande.`;
+  useEffect(() => {
+    const lenis = getLenis();
+    if (open) lenis?.stop();
+    else lenis?.start();
+    document.documentElement.style.overflow = open ? "hidden" : "";
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open]);
+
+  const light = scrolled && !open;
 
   return (
+    <>
     <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? "bg-cream/95 backdrop-blur-sm shadow-sm border-b border-gold/20"
-          : "bg-transparent"
-      }`}
+      className={`fixed inset-x-0 top-0 z-50 transition-[transform,background-color,color] duration-700 ease-[var(--ease-maalem)] ${
+        hidden && !open ? "-translate-y-full" : "translate-y-0"
+      } ${light ? "bg-chaux/85 text-manganese shadow-[0_1px_0_var(--rule)] backdrop-blur-md" : "text-chaux"}`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-20">
-          {/* Logo */}
-          <a href="#accueil" className="flex flex-col leading-tight">
-            <span
-              className={`text-2xl font-heading font-bold tracking-widest transition-colors ${
-                isScrolled ? "text-terracotta-dark" : "text-cream"
-              }`}
-            >
-              ARTIZANA
-            </span>
-            <span
-              className={`text-xs tracking-[0.3em] uppercase font-body transition-colors ${
-                isScrolled ? "text-gold-dark" : "text-gold-light"
-              }`}
-            >
-              Artisanat Marocain
-            </span>
-          </a>
+      <div className="mx-auto flex h-20 max-w-[1500px] items-center justify-between px-[var(--gutter)]">
+        <a href="#accueil" aria-label="Artizana, retour à l'accueil" onClick={() => setOpen(false)}>
+          <Logo />
+        </a>
 
-          {/* Desktop Nav */}
-          <nav className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className={`text-sm font-body font-semibold tracking-wide transition-colors hover:text-gold ${
-                  isScrolled ? "text-brown" : "text-cream/90"
-                }`}
-              >
-                {link.label}
-              </a>
-            ))}
-          </nav>
-
-          {/* CTA + Hamburger */}
-          <div className="flex items-center gap-3">
-            <a
-              href={whatsappHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="hidden sm:flex items-center gap-2 bg-[#25D366] hover:bg-[#1EB857] text-white text-sm font-semibold px-4 py-2.5 rounded-full transition-colors shadow-md"
-            >
-              <MessageCircle size={16} />
-              Commander
+        <nav className="hidden items-center gap-9 lg:flex" aria-label="Navigation principale">
+          {links.map((l) => (
+            <a key={l.href} href={l.href} className="link-underline text-sm font-medium tracking-wide">
+              {l.label}
             </a>
+          ))}
+        </nav>
 
-            <button
-              className={`md:hidden p-2 rounded-lg transition-colors ${
-                isScrolled ? "text-brown hover:bg-brown/10" : "text-cream hover:bg-white/10"
-              }`}
-              onClick={() => setMenuOpen((v) => !v)}
-              aria-label="Menu"
-            >
-              {menuOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
+        <div className="flex items-center gap-2">
+          <a
+            href={orderHref}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="btn btn-whatsapp hidden !py-3 text-sm sm:inline-flex"
+            data-magnetic
+          >
+            <MessageCircle size={16} /> Commander
+          </a>
+          <button
+            className="grid h-11 w-11 place-items-center rounded-full border border-current/25 lg:hidden"
+            onClick={() => setOpen((v) => !v)}
+            aria-expanded={open}
+            aria-controls="menu-mobile"
+            aria-label={open ? "Fermer le menu" : "Ouvrir le menu"}
+          >
+            {open ? <X size={20} /> : <Menu size={20} />}
+          </button>
         </div>
       </div>
-
-      {/* Mobile Menu */}
-      {menuOpen && (
-        <div className="md:hidden bg-cream border-t border-gold/20 shadow-lg">
-          <nav className="flex flex-col px-4 py-4 gap-1">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                onClick={() => setMenuOpen(false)}
-                className="text-brown font-semibold py-3 px-2 border-b border-sand/50 hover:text-terracotta transition-colors"
-              >
-                {link.label}
-              </a>
-            ))}
-            <a
-              href={whatsappHref}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-3 flex items-center justify-center gap-2 bg-[#25D366] text-white font-semibold py-3 px-4 rounded-full"
-            >
-              <MessageCircle size={18} />
-              Commander via WhatsApp
-            </a>
-          </nav>
-        </div>
-      )}
     </header>
+
+      {/* outside the header: a transformed parent would trap position: fixed */}
+      <div
+        id="menu-mobile"
+        className={`fixed inset-0 z-40 flex flex-col justify-between bg-manganese px-[var(--gutter)] pb-10 pt-28 text-chaux transition-[clip-path] duration-700 ease-[var(--ease-maalem)] lg:hidden ${
+          open ? "[clip-path:inset(0_0_0_0)]" : "pointer-events-none [clip-path:inset(0_0_100%_0)]"
+        }`}
+        inert={!open}
+      >
+        <nav className="flex flex-col" aria-label="Navigation mobile">
+          {links.map((l) => (
+            <a
+              key={l.href}
+              href={l.href}
+              onClick={() => setOpen(false)}
+              className="flex items-baseline gap-4 border-b border-chaux/10 py-4"
+            >
+              <span className="eyebrow text-miel">{l.n}</span>
+              <span className="display text-5xl">{l.label}</span>
+            </a>
+          ))}
+        </nav>
+        <a href={orderHref} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp justify-center">
+          <MessageCircle size={18} /> Commander via WhatsApp
+        </a>
+      </div>
+    </>
   );
 }
