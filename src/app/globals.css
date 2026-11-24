@@ -1,26 +1,64 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --color-terracotta: #C4603B;
+  --color-terracotta-light: #D97B55;
+  --color-terracotta-dark: #9C3D1A;
+  --color-gold: #C9962A;
+  --color-gold-light: #E0B547;
+  --color-gold-dark: #9A6E10;
+  --color-crimson: #7A1515;
+  --color-zellige: #1A4D6E;
+  --color-sand: #F0D49A;
+  --color-cream: #FDF6EC;
+  --color-brown: #2C1A0E;
+  --color-brown-medium: #5C3317;
+
+  --font-heading: var(--font-playfair), Georgia, serif;
+  --font-body: var(--font-nunito), system-ui, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-body);
+  background-color: #FDF6EC;
+  color: #2C1A0E;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--font-heading);
+}
+
+.zellige-bg {
+  background-image:
+    linear-gradient(45deg, rgba(201, 150, 42, 0.1) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(201, 150, 42, 0.1) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(201, 150, 42, 0.1) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(201, 150, 42, 0.1) 75%);
+  background-size: 24px 24px;
+  background-position: 0 0, 0 12px, 12px -12px, -12px 0px;
+}
+
+.arch-clip {
+  border-radius: 100% 100% 0 0 / 50% 50% 0 0;
+}
+
+.moroccan-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.moroccan-divider::before,
+.moroccan-divider::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(to right, transparent, #C9962A, transparent);
 }
