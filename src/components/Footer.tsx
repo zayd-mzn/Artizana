@@ -1,48 +1,83 @@
+import Link from "next/link";
 import { MessageCircle } from "lucide-react";
 import { Mark } from "./Logo";
+import NewsletterForm from "./NewsletterForm";
 import { whatsappLink } from "@/lib/whatsapp";
+import { shop } from "@/data/site";
+import { shopCategories } from "@/data/products";
 
-const nav = [
-  { label: "Les métiers", href: "#metiers" },
-  { label: "L'atelier zellige", href: "#atelier" },
-  { label: "Le geste", href: "#geste" },
-  { label: "La collection", href: "#collection" },
-  { label: "Contact", href: "#contact" },
+const useful = [
+  { label: "À propos", href: "/a-propos" },
+  { label: "Notre blog", href: "/blog" },
+  { label: "FAQ", href: "/faq" },
+  { label: "L'atelier zellige", href: "/atelier" },
+  { label: "Nous contacter", href: "/contact" },
 ];
+
+const legal = [
+  { label: "Mentions légales", href: "/mentions-legales" },
+  { label: "Politique de confidentialité", href: "/politique-de-confidentialite" },
+];
+
+const heading = "eyebrow mb-5 text-chaux/40";
+const link = "link-underline text-chaux/80 hover:text-chaux";
 
 export default function Footer() {
   return (
     <footer className="relative overflow-hidden bg-manganese text-chaux">
       <div className="zellige-band opacity-90" aria-hidden="true" />
       <div className="mx-auto max-w-[1500px] px-[var(--gutter)] pt-20">
-        <div className="grid gap-14 md:grid-cols-12">
-          <div className="md:col-span-5">
-            <Mark variant="reverse" className="h-40 w-auto" />
-            <p className="mt-8 max-w-sm font-display text-3xl leading-snug">
+        <div className="grid gap-14 md:grid-cols-2 lg:grid-cols-12">
+          <div className="lg:col-span-4">
+            <Mark variant="reverse" className="h-32 w-auto" />
+            <p className="mt-6 max-w-sm font-display text-2xl leading-snug">
               Préserver l&apos;artisanat marocain, <em className="text-miel">une pièce à la fois.</em>
             </p>
+            <p className={`${heading} mt-10`}>Newsletter</p>
+            <p className="mb-4 text-sm text-chaux/70">Nouvelles pièces, offres et conseils d&apos;entretien, une fois par mois.</p>
+            <NewsletterForm />
           </div>
-          <nav className="md:col-span-3" aria-label="Pied de page">
-            <p className="eyebrow mb-5 text-chaux/40">Explorer</p>
+
+          <nav className="lg:col-span-2" aria-label="Collections">
+            <p className={heading}>Collections</p>
             <ul className="space-y-3">
-              {nav.map((l) => (
-                <li key={l.href}>
-                  <a href={l.href} className="link-underline text-chaux/80 hover:text-chaux">
-                    {l.label}
-                  </a>
+              {shopCategories.map((c) => (
+                <li key={c.id}>
+                  <Link href={`/collections/${c.id}`} className={link}>{c.label}</Link>
                 </li>
               ))}
             </ul>
           </nav>
-          <div className="md:col-span-4">
-            <p className="eyebrow mb-5 text-chaux/40">Atelier</p>
+
+          <nav className="lg:col-span-2" aria-label="Liens utiles">
+            <p className={heading}>Liens utiles</p>
+            <ul className="space-y-3">
+              {useful.map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className={link}>{l.label}</Link>
+                </li>
+              ))}
+            </ul>
+            <p className={`${heading} mt-10`}>Informations légales</p>
+            <ul className="space-y-3">
+              {legal.map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className={link}>{l.label}</Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div className="lg:col-span-4">
+            <p className={heading}>Contact</p>
             <address className="space-y-2 not-italic text-chaux/80">
-              <p>Médina de Fès, Maroc</p>
-              <p>+212 6 00 00 00 00</p>
-              <p>contact@artizana.ma</p>
-              <p className="pt-2 text-chaux/50">Lun – Sam · 9h00 – 20h00</p>
+              <p>{shop.address}</p>
+              <p><a href={`tel:${shop.phone.replace(/\s/g, "")}`} className="hover:text-chaux">{shop.phone}</a></p>
+              <p><a href={`mailto:${shop.email}`} className="hover:text-chaux">{shop.email}</a></p>
+              <p className="pt-2 text-chaux/50">{shop.hours}</p>
             </address>
-            <div className="mt-6 flex gap-3">
+            <p className={`${heading} mt-10`}>Réseaux sociaux</p>
+            <div className="flex gap-3">
               <a
                 href={whatsappLink("Bonjour !")}
                 target="_blank"
@@ -52,10 +87,10 @@ export default function Footer() {
               >
                 <MessageCircle size={18} />
               </a>
-              <a href="#" className="grid h-11 w-11 place-items-center rounded-full border border-chaux/20 text-xs font-bold transition-colors hover:border-miel hover:text-miel" aria-label="Instagram">
+              <a href={shop.social.instagram} target="_blank" rel="noopener noreferrer" className="grid h-11 w-11 place-items-center rounded-full border border-chaux/20 text-xs font-bold transition-colors hover:border-miel hover:text-miel" aria-label="Instagram">
                 IG
               </a>
-              <a href="#" className="grid h-11 w-11 place-items-center rounded-full border border-chaux/20 text-xs font-bold transition-colors hover:border-miel hover:text-miel" aria-label="Facebook">
+              <a href={shop.social.facebook} target="_blank" rel="noopener noreferrer" className="grid h-11 w-11 place-items-center rounded-full border border-chaux/20 text-xs font-bold transition-colors hover:border-miel hover:text-miel" aria-label="Facebook">
                 FB
               </a>
             </div>

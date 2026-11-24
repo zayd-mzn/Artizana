@@ -118,10 +118,10 @@ export default function Atelier() {
         <div className="mb-14 grid gap-8 md:grid-cols-12">
           <p className="eyebrow text-miel md:col-span-3">02 — L&apos;Atelier</p>
           <div className="md:col-span-9">
-            <h2 data-reveal="lines" className="display text-[clamp(2.8rem,6vw,6.5rem)]">
+            <h2 className="display text-[clamp(2.8rem,6vw,6.5rem)]">
               Composez votre <em className="text-miel">zellige</em>
             </h2>
-            <p data-reveal="fade" className="mt-6 max-w-2xl text-lg leading-relaxed text-chaux/70">
+            <p className="mt-6 max-w-2xl text-lg leading-relaxed text-chaux/70">
               Un maâlem part d&apos;une étoile centrale, la <em>ras al-shabaka</em>, et la répète par
               symétrie. Ici, chaque pièce que vous émaillez se répète sur tout le panneau. Survolez
               une tesselle pour voir ses jumelles.
@@ -131,7 +131,7 @@ export default function Atelier() {
 
         <div className="grid items-start gap-10 lg:grid-cols-12">
           {/* the panel */}
-          <div className="lg:col-span-7" data-reveal="fade">
+          <div className="lg:col-span-7">
             <div className="relative overflow-hidden rounded-[1.75rem] bg-chaux p-3 shadow-[0_40px_120px_-40px_rgba(0,0,0,0.8)]">
               <svg
                 ref={svgRef}
@@ -176,7 +176,7 @@ export default function Atelier() {
           </div>
 
           {/* controls */}
-          <div className="flex flex-col gap-10 lg:col-span-5" data-reveal="fade" data-reveal-delay="0.15">
+          <div className="flex flex-col gap-10 lg:col-span-5">
             <fieldset>
               <legend className="eyebrow mb-4 text-chaux/60">Motif</legend>
               <div className="grid grid-cols-2 gap-3">
@@ -265,7 +265,7 @@ export default function Atelier() {
               </button>
             </div>
 
-            <a href={orderHref} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp justify-center text-base" data-magnetic>
+            <a href={orderHref} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp justify-center text-base">
               <MessageCircle size={18} /> Commander ce motif
             </a>
           </div>

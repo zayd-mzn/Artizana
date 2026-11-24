@@ -3,23 +3,24 @@
 import { useState, type FormEvent } from "react";
 import { MessageCircle, Phone, MapPin, Mail, Send, CheckCircle } from "lucide-react";
 import { whatsappLink } from "@/lib/whatsapp";
+import { shop } from "@/data/site";
 
 const field =
   "w-full border-b border-chaux/25 bg-transparent py-3 text-lg text-chaux placeholder:text-chaux/30 transition-colors focus:border-miel focus:outline-none";
 
 export default function Contact() {
-  const [form, setForm] = useState({ nom: "", telephone: "", message: "" });
+  const [form, setForm] = useState({ nom: "", email: "", telephone: "", message: "" });
   const [sent, setSent] = useState(false);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     window.open(
-      whatsappLink(`Bonjour !\n\nNom : ${form.nom}\nTéléphone : ${form.telephone}\n\nMessage :\n${form.message}`),
+      whatsappLink(`Bonjour !\n\nNom : ${form.nom}\nEmail : ${form.email}\nTéléphone : ${form.telephone}\n\nMessage :\n${form.message}`),
       "_blank",
       "noopener,noreferrer",
     );
     setSent(true);
-    setForm({ nom: "", telephone: "", message: "" });
+    setForm({ nom: "", email: "", telephone: "", message: "" });
     setTimeout(() => setSent(false), 6000);
   };
 
@@ -32,11 +33,11 @@ export default function Contact() {
       />
       <div className="relative mx-auto grid max-w-[1500px] gap-16 px-[var(--gutter)] lg:grid-cols-12">
         <div className="lg:col-span-6">
-          <p className="eyebrow mb-6 text-miel">05 — Contact</p>
-          <h2 data-reveal="lines" className="display text-[clamp(2.8rem,6vw,6.5rem)]">
+          <p className="eyebrow mb-6 text-miel">Écrivez-nous</p>
+          <h2 className="display text-[clamp(2.4rem,5vw,5rem)]">
             Parlons de <em className="text-miel">votre pièce</em>
           </h2>
-          <p data-reveal="fade" className="mt-8 max-w-md text-lg leading-relaxed text-chaux/70">
+          <p className="mt-8 max-w-md text-lg leading-relaxed text-chaux/70">
             Une question, une dimension sur mesure, un zellige composé dans l&apos;Atelier ? Écrivez-nous
             : nous répondons tous les jours, en français, en arabe ou en anglais.
           </p>
@@ -46,7 +47,7 @@ export default function Contact() {
             target="_blank"
             rel="noopener noreferrer"
             className="group mt-12 flex items-center gap-5 rounded-[1.5rem] bg-whatsapp p-6 text-white transition-transform hover:-translate-y-1"
-            data-magnetic
+           
           >
             <span className="grid h-14 w-14 place-items-center rounded-2xl bg-white/15">
               <MessageCircle size={26} />
@@ -60,9 +61,9 @@ export default function Contact() {
 
           <ul className="mt-10 grid gap-6 sm:grid-cols-3">
             {[
-              { icon: Phone, label: "Téléphone", value: "+212 6 00 00 00 00" },
-              { icon: Mail, label: "Email", value: "contact@artizana.ma" },
-              { icon: MapPin, label: "Atelier", value: "Médina de Fès" },
+              { icon: Phone, label: "Téléphone", value: shop.phone },
+              { icon: Mail, label: "Email", value: shop.email },
+              { icon: MapPin, label: "Boutique", value: shop.address },
             ].map(({ icon: Icon, label, value }) => (
               <li key={label}>
                 <Icon size={18} className="text-miel" />
@@ -73,7 +74,7 @@ export default function Contact() {
           </ul>
         </div>
 
-        <div className="lg:col-span-5 lg:col-start-8" data-reveal="fade" data-reveal-delay="0.15">
+        <div className="lg:col-span-5 lg:col-start-8">
           <div className="rounded-[2rem] border border-chaux/15 bg-chaux/[0.04] p-8 backdrop-blur-sm md:p-10">
             {sent ? (
               <div className="flex flex-col items-center justify-center gap-4 py-16 text-center" role="status">
@@ -95,6 +96,17 @@ export default function Contact() {
                     value={form.nom}
                     onChange={(e) => setForm((f) => ({ ...f, nom: e.target.value }))}
                     placeholder="Mohammed Alami"
+                    className={field}
+                  />
+                </label>
+                <label className="block">
+                  <span className="eyebrow text-[0.62rem] text-chaux/60">Email</span>
+                  <input
+                    type="email"
+                    autoComplete="email"
+                    value={form.email}
+                    onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
+                    placeholder="vous@exemple.ma"
                     className={field}
                   />
                 </label>

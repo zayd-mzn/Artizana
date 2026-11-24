@@ -1,94 +1,38 @@
-"use client";
-
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { crafts } from "@/data/crafts";
 import CraftArt from "./CraftArt";
 
-/**
- * Les Métiers: eight crafts in a pinned horizontal scroll on large screens,
- * a native swipeable row on small ones.
- */
+/** Les Métiers: eight crafts in a swipeable row. */
 export default function Metiers() {
-  const section = useRef<HTMLElement>(null);
-  const track = useRef<HTMLDivElement>(null);
-  const bar = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const mm = gsap.matchMedia();
-    mm.add("(min-width: 1024px) and (prefers-reduced-motion: no-preference)", () => {
-      const el = track.current!;
-      const distance = () => el.scrollWidth - window.innerWidth;
-      const tween = gsap.to(el, {
-        x: () => -distance(),
-        ease: "none",
-        scrollTrigger: {
-          trigger: section.current,
-          start: "top top",
-          end: () => `+=${distance()}`,
-          pin: true,
-          scrub: 0.8,
-          invalidateOnRefresh: true,
-          onUpdate: (self) => gsap.set(bar.current, { scaleX: self.progress }),
-        },
-      });
-      // the artwork inside each panel drifts against the scroll (parallax)
-      el.querySelectorAll<HTMLElement>("[data-parallax]").forEach((art) => {
-        gsap.fromTo(
-          art,
-          { xPercent: -8 },
-          {
-            xPercent: 8,
-            ease: "none",
-            scrollTrigger: {
-              trigger: art.parentElement,
-              containerAnimation: tween,
-              start: "left right",
-              end: "right left",
-              scrub: true,
-            },
-          },
-        );
-      });
-      return () => ScrollTrigger.refresh();
-    });
-    return () => mm.revert();
-  }, []);
-
   return (
-    <section ref={section} id="metiers" className="relative overflow-hidden bg-chaux text-manganese lg:h-screen">
-      <div ref={track} className="flex h-full flex-col gap-0 lg:w-max lg:flex-row">
+    <section id="metiers" className="relative overflow-hidden bg-chaux text-manganese">
+      <div className="flex flex-col">
         {/* intro panel */}
-        <div className="flex shrink-0 flex-col justify-between gap-10 px-[var(--gutter)] py-24 lg:h-full lg:w-[42vw] lg:py-28">
+        <div className="mx-auto flex w-full max-w-[1500px] flex-col gap-10 px-[var(--gutter)] pb-12 pt-24 lg:pt-28">
           <p className="eyebrow text-terre">01 — Les Métiers</p>
           <div>
-            <h2 data-reveal="lines" className="display text-[clamp(3rem,6.5vw,7rem)]">
+            <h2 className="display text-[clamp(3rem,6.5vw,7rem)]">
               Huit gestes,
               <br />
               <em>mille ans</em> de mains
             </h2>
-            <p data-reveal="fade" className="mt-8 max-w-md text-lg leading-relaxed text-[var(--ink-soft)]">
+            <p className="mt-8 max-w-md text-lg leading-relaxed text-[var(--ink-soft)]">
               Du zellige de Fès à l&apos;argent de Tiznit, chaque métier a sa ville, ses outils et
               ses familles de maâlems. Voici ceux avec qui nous travaillons.
             </p>
           </div>
-          <p className="eyebrow hidden items-center gap-3 text-[var(--ink-soft)] lg:flex">
-            Faites défiler <span className="h-px w-16 bg-current" /> →
-          </p>
         </div>
 
-        {/* mobile: swipe row; desktop: part of the pinned track */}
-        <div className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto px-[var(--gutter)] pb-16 lg:contents">
+        {/* swipe row */}
+        <div className="no-scrollbar flex snap-x snap-mandatory gap-4 overflow-x-auto px-[var(--gutter)] pb-24">
           {crafts.map((c, i) => (
             <article
               key={c.id}
-              className="relative flex w-[86vw] shrink-0 snap-center flex-col overflow-hidden rounded-[2rem] sm:w-[60vw] lg:h-full lg:w-[min(78vw,1100px)] lg:flex-row lg:rounded-none"
+              className="relative flex w-[86vw] shrink-0 snap-center flex-col overflow-hidden rounded-[2rem] sm:w-[60vw] lg:h-[75vh] lg:w-[min(78vw,1100px)] lg:flex-row"
               style={{ background: c.tone, color: c.ink }}
               aria-labelledby={`craft-${c.id}`}
             >
               <div className="relative h-[52vh] overflow-hidden lg:h-full lg:w-1/2">
-                <div data-parallax className="absolute inset-[-10%_-12%]">
+                <div className="absolute inset-0">
                   <CraftArt variant={c.art} className="h-full w-full" seed={i + 2} title={`Illustration : ${c.name}`} />
                 </div>
                 <span className="absolute left-5 top-5 rounded-full bg-black/25 px-3 py-1.5 text-xs font-semibold text-white backdrop-blur-sm">
@@ -116,9 +60,6 @@ export default function Metiers() {
             </article>
           ))}
         </div>
-      </div>
-      <div className="absolute inset-x-0 bottom-0 hidden h-1 bg-manganese/10 lg:block">
-        <div ref={bar} className="h-full origin-left scale-x-0 bg-terre" />
       </div>
     </section>
   );

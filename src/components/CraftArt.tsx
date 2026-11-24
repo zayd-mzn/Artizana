@@ -215,11 +215,12 @@ const RENDER: Record<ArtVariant, Renderer> = {
         {[0.32, 0.5, 0.68, 0.84].map((t, i) => {
           const y = 110 + t * 250;
           const half = 14 + (150 - 14) * Math.pow(t, 1.25);
+          const count = Math.round(half / 14);
           return (
             <g key={i}>
               <line x1={cx - half} x2={cx + half} y1={y} y2={y} stroke={c2} strokeWidth={3} />
-              {Array.from({ length: Math.round(half / 14) }, (_, k, arr) => {
-                const x = cx - half + ((k + 0.5) * (half * 2)) / arr.length;
+              {Array.from({ length: count }, (_, k) => {
+                const x = cx - half + ((k + 0.5) * (half * 2)) / count;
                 return <path key={k} d={toPath(starPoints(x, y - 14, 8, 0.45))} fill={c2} />;
               })}
             </g>

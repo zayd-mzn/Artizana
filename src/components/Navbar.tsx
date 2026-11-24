@@ -1,17 +1,20 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Menu, X, MessageCircle } from "lucide-react";
 import Logo from "./Logo";
 import { whatsappLink } from "@/lib/whatsapp";
-import { getLenis } from "./Motion";
 
 const links = [
-  { label: "Métiers", href: "#metiers", n: "01" },
-  { label: "Atelier", href: "#atelier", n: "02" },
-  { label: "Le geste", href: "#geste", n: "03" },
-  { label: "Collection", href: "#collection", n: "04" },
-  { label: "Contact", href: "#contact", n: "05" },
+  { label: "Accueil", href: "/", n: "01" },
+  { label: "Collections", href: "/collections", n: "02" },
+  { label: "Atelier", href: "/atelier", n: "03" },
+  { label: "À propos", href: "/a-propos", n: "04" },
+  { label: "Blog", href: "/blog", n: "05" },
+  { label: "FAQ", href: "/faq", n: "06" },
+  { label: "Contact", href: "/contact", n: "07" },
 ];
 
 const orderHref = whatsappLink("Bonjour, je souhaite passer une commande.");
@@ -20,24 +23,25 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const isActive = (href: string) => (href === "/" ? pathname === "/" : pathname.startsWith(href));
 
   useEffect(() => {
     let last = window.scrollY;
+    // the home hero is a full screen; other pages open with a short dark header
+    const threshold = pathname === "/" ? window.innerHeight * 0.85 : 120;
     const onScroll = () => {
       const y = window.scrollY;
-      setScrolled(y > window.innerHeight * 0.85);
+      setScrolled(y > threshold);
       setHidden(y > last && y > 400);
       last = y;
     };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
-  }, []);
+  }, [pathname]);
 
   useEffect(() => {
-    const lenis = getLenis();
-    if (open) lenis?.stop();
-    else lenis?.start();
     document.documentElement.style.overflow = open ? "hidden" : "";
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);
@@ -54,15 +58,20 @@ export default function Navbar() {
       } ${light ? "bg-chaux/85 text-manganese shadow-[0_1px_0_var(--rule)] backdrop-blur-md" : "text-chaux"}`}
     >
       <div className="mx-auto flex h-20 max-w-[1500px] items-center justify-between px-[var(--gutter)]">
-        <a href="#accueil" aria-label="Artizana, retour à l'accueil" onClick={() => setOpen(false)}>
+        <Link href="/" aria-label="Artizana, retour à l'accueil" onClick={() => setOpen(false)}>
           <Logo />
-        </a>
+        </Link>
 
-        <nav className="hidden items-center gap-9 lg:flex" aria-label="Navigation principale">
+        <nav className="hidden items-center gap-7 lg:flex" aria-label="Navigation principale">
           {links.map((l) => (
-            <a key={l.href} href={l.href} className="link-underline text-sm font-medium tracking-wide">
+            <Link
+              key={l.href}
+              href={l.href}
+              aria-current={isActive(l.href) ? "page" : undefined}
+              className={`link-underline text-sm font-medium tracking-wide ${isActive(l.href) ? "text-miel" : ""}`}
+            >
               {l.label}
-            </a>
+            </Link>
           ))}
         </nav>
 
@@ -72,7 +81,7 @@ export default function Navbar() {
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-whatsapp hidden !py-3 text-sm sm:inline-flex"
-            data-magnetic
+           
           >
             <MessageCircle size={16} /> Commander
           </a>
@@ -99,15 +108,16 @@ export default function Navbar() {
       >
         <nav className="flex flex-col" aria-label="Navigation mobile">
           {links.map((l) => (
-            <a
+            <Link
               key={l.href}
               href={l.href}
               onClick={() => setOpen(false)}
-              className="flex items-baseline gap-4 border-b border-chaux/10 py-4"
+              aria-current={isActive(l.href) ? "page" : undefined}
+              className="flex items-baseline gap-4 border-b border-chaux/10 py-3"
             >
               <span className="eyebrow text-miel">{l.n}</span>
-              <span className="display text-5xl">{l.label}</span>
-            </a>
+              <span className="display text-4xl">{l.label}</span>
+            </Link>
           ))}
         </nav>
         <a href={orderHref} target="_blank" rel="noopener noreferrer" className="btn btn-whatsapp justify-center">

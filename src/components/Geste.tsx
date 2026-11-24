@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { gsap } from "gsap";
 import { buildPattern, GLAZES, hash, shade, starPoints, toPath } from "@/lib/zellige";
 
 const steps = [
@@ -139,25 +138,7 @@ export default function Geste() {
     );
     items.forEach((i) => io.observe(i));
 
-    // counters
-    const counters = root.current!.querySelectorAll<HTMLElement>("[data-count-to]");
-    const ctx = gsap.context(() => {
-      counters.forEach((el) => {
-        const to = Number(el.dataset.countTo);
-        const obj = { v: 0 };
-        gsap.to(obj, {
-          v: to,
-          duration: 2,
-          ease: "power2.out",
-          scrollTrigger: { trigger: el, start: "top 90%", once: true },
-          onUpdate: () => (el.textContent = String(Math.round(obj.v))),
-        });
-      });
-    }, root);
-    return () => {
-      io.disconnect();
-      ctx.revert();
-    };
+    return () => io.disconnect();
   }, []);
 
   return (
@@ -165,7 +146,7 @@ export default function Geste() {
       <div className="mx-auto max-w-[1500px] px-[var(--gutter)]">
         <div className="mb-16 grid gap-8 md:grid-cols-12">
           <p className="eyebrow text-terre md:col-span-3">03 — Le geste</p>
-          <h2 data-reveal="lines" className="display text-[clamp(2.8rem,6vw,6.5rem)] md:col-span-9">
+          <h2 className="display text-[clamp(2.8rem,6vw,6.5rem)] md:col-span-9">
             De la terre <em>au motif</em>
           </h2>
         </div>
@@ -206,7 +187,7 @@ export default function Geste() {
             <div key={s.label} className="bg-chaux p-6 md:p-10">
               <dt className="eyebrow text-[var(--ink-soft)]">{s.label}</dt>
               <dd className="display mt-3 text-6xl md:text-7xl">
-                <span data-count-to={s.value}>{s.value}</span>
+                <span>{s.value}</span>
                 <span className="text-terre">{s.suffix}</span>
               </dd>
             </div>

@@ -4,6 +4,8 @@ export type Category = "tous" | "djellaba" | "tapis" | "poterie" | "bijoux" | "z
 
 export interface Product {
   id: number;
+  /** URL segment: /produits/[slug] */
+  slug: string;
   name: string;
   category: Exclude<Category, "tous">;
   priceFrom: number;
@@ -14,6 +16,12 @@ export interface Product {
   /** two glazes used by the generative artwork */
   colors: [string, string];
   badge?: string;
+  material: string;
+  technique: string;
+  care: string;
+  subcategory: string;
+  /** longer text for the product page */
+  details: string;
 }
 
 export const categories: { id: Category; label: string; arabic: string }[] = [
@@ -29,6 +37,13 @@ export const categories: { id: Category; label: string; arabic: string }[] = [
 export const products: Product[] = [
   {
     id: 1,
+    subcategory: "Homme",
+    details:
+      "Coupée dans une laine tissée à Fès, cette djellaba garde la coupe ample et la capuche pointue de la tradition. Les finitions du col et des manches sont brodées au fil de soie par un maâlem tailleur.",
+    slug: "djellaba-homme-traditionnelle",
+    material: "Laine pure",
+    technique: "Broderie à la main",
+    care: "Lavage à la main à l'eau froide, séchage à plat.",
     name: "Djellaba Homme Traditionnelle",
     category: "djellaba",
     priceFrom: 350,
@@ -41,6 +56,13 @@ export const products: Product[] = [
   },
   {
     id: 2,
+    subcategory: "Femme",
+    details:
+      "Un coton léger qui tombe bien, rehaussé de broderies florales au fil doré sur le plastron et les manches. Elle se porte aussi bien pour les fêtes que pour sortir.",
+    slug: "djellaba-femme-brodee",
+    material: "Coton fin, fil doré",
+    technique: "Broderie florale à la main",
+    care: "Lavage à la main, repassage à l'envers.",
     name: "Djellaba Femme Brodée",
     category: "djellaba",
     priceFrom: 450,
@@ -53,6 +75,13 @@ export const products: Product[] = [
   },
   {
     id: 3,
+    subcategory: "Enfant",
+    details:
+      "La même coupe que celle des grands, dans un coton doux qui supporte la machine. Les couleurs vives sont teintes à cœur et ne passent pas au lavage.",
+    slug: "djellaba-enfant",
+    material: "Coton doux",
+    technique: "Confection artisanale",
+    care: "Lavage en machine à 30 °C, programme délicat.",
     name: "Djellaba Enfant",
     category: "djellaba",
     priceFrom: 200,
@@ -64,6 +93,13 @@ export const products: Product[] = [
   },
   {
     id: 4,
+    subcategory: "Tapis noués",
+    details:
+      "Noué à la main par les femmes des tribus Beni Ourain du Moyen Atlas, dans une laine épaisse laissée à sa couleur naturelle. Les losanges bruns sont propres à chaque tisserande : deux tapis ne sont jamais identiques.",
+    slug: "tapis-beni-ourain",
+    material: "Laine de mouton non teinte",
+    technique: "Nouage à la main",
+    care: "Aspiration sans brosse rotative, nettoyage professionnel.",
     name: "Tapis Beni Ourain",
     category: "tapis",
     priceFrom: 800,
@@ -76,6 +112,13 @@ export const products: Product[] = [
   },
   {
     id: 5,
+    subcategory: "Tapis tissés à plat",
+    details:
+      "Un kilim tissé à plat, sans velours, donc léger et réversible. Ses motifs berbères multicolores viennent des villages du Haut Atlas, où chaque symbole a un sens.",
+    slug: "tapis-kilim-berbere",
+    material: "Laine teinte",
+    technique: "Tissage à plat",
+    care: "Secouer régulièrement, détacher à l'eau froide.",
     name: "Tapis Kilim Berbère",
     category: "tapis",
     priceFrom: 600,
@@ -88,6 +131,13 @@ export const products: Product[] = [
   },
   {
     id: 6,
+    subcategory: "Tapis noués",
+    details:
+      "Les tapis d'Azilal sont noués sur fond de laine blanche avec des motifs libres et des couleurs franches. Chaque pièce raconte l'histoire de la femme qui l'a tissée.",
+    slug: "tapis-azilal",
+    material: "Laine naturelle",
+    technique: "Nouage à la main",
+    care: "Aspiration douce, nettoyage professionnel.",
     name: "Tapis Azilal",
     category: "tapis",
     priceFrom: 700,
@@ -99,6 +149,13 @@ export const products: Product[] = [
   },
   {
     id: 7,
+    subcategory: "Cuisine",
+    details:
+      "Tourné dans l'argile de Fès puis peint à la main, ce tagine sert à la cuisson douce comme à la présentation. Les motifs géométriques reprennent ceux du zellige.",
+    slug: "tagine-en-ceramique",
+    material: "Argile de Fès, émail",
+    technique: "Tournage et peinture à la main",
+    care: "Décoratif ou service ; ne pas passer au lave-vaisselle.",
     name: "Tagine en Céramique",
     category: "poterie",
     priceFrom: 150,
@@ -111,6 +168,13 @@ export const products: Product[] = [
   },
   {
     id: 8,
+    subcategory: "Arts de la table",
+    details:
+      "Une assiette de Safi émaillée en plusieurs couleurs, avec une rosace centrale peinte au pinceau. Elle se pose sur la table ou s'accroche au mur.",
+    slug: "assiette-de-safi",
+    material: "Céramique émaillée",
+    technique: "Peinture au pinceau",
+    care: "Lavage à la main recommandé.",
     name: "Assiette de Safi",
     category: "poterie",
     priceFrom: 120,
@@ -122,6 +186,13 @@ export const products: Product[] = [
   },
   {
     id: 9,
+    subcategory: "Arts de la table",
+    details:
+      "Le vert de Tamegroute vient d'un émail au cuivre cuit au four à bois, dans la vallée du Drâa. Les coulures naturelles rendent chaque bol unique.",
+    slug: "bol-de-tamegroute",
+    material: "Argile, émail vert",
+    technique: "Cuisson au four à bois",
+    care: "Lavage à la main, éviter les chocs thermiques.",
     name: "Bol de Tamegroute",
     category: "poterie",
     priceFrom: 140,
@@ -134,6 +205,13 @@ export const products: Product[] = [
   },
   {
     id: 10,
+    subcategory: "Mobilier",
+    details:
+      "Un plateau de zellige taillé au menqach, tesselle par tesselle, et posé sur un piètement en fer forgé. Les dimensions et les couleurs se choisissent sur mesure.",
+    slug: "table-en-zellige",
+    material: "Zellige, fer forgé",
+    technique: "Taille au menqach, pose à la main",
+    care: "Nettoyer au savon noir, éviter les produits acides.",
     name: "Table en Zellige",
     category: "zellige",
     priceFrom: 1900,
@@ -146,6 +224,13 @@ export const products: Product[] = [
   },
   {
     id: 11,
+    subcategory: "Panneaux muraux",
+    details:
+      "Un panneau étoile-et-croix (khatam) monté sur ciment, prêt à fixer au mur. Vous pouvez composer vos couleurs dans l'Atelier avant de commander.",
+    slug: "panneau-khatam",
+    material: "Zellige sur ciment",
+    technique: "Taille au menqach",
+    care: "Nettoyer au chiffon humide et au savon noir.",
     name: "Panneau Khatam",
     category: "zellige",
     priceFrom: 900,
@@ -157,6 +242,13 @@ export const products: Product[] = [
   },
   {
     id: 12,
+    subcategory: "Luminaires",
+    details:
+      "Une lanterne en laiton martelé puis ajouré au poinçon par les dinandiers de Marrakech. Allumée, elle projette un motif d'étoiles sur les murs.",
+    slug: "lanterne-ciselee",
+    material: "Laiton",
+    technique: "Martelage et ajourage au poinçon",
+    care: "Dépoussiérer au chiffon sec.",
     name: "Lanterne Ciselée",
     category: "maison",
     priceFrom: 380,
@@ -169,6 +261,13 @@ export const products: Product[] = [
   },
   {
     id: 13,
+    subcategory: "Arts de la table",
+    details:
+      "Une théière, des verres et un plateau en cuivre ciselé à la main à Fès : tout le nécessaire pour servir le thé à la menthe. Le coffret se prête bien aux cadeaux.",
+    slug: "service-a-the-marocain",
+    material: "Cuivre et verre",
+    technique: "Ciselure à la main",
+    care: "Lavage à la main, sécher aussitôt.",
     name: "Service à Thé Marocain",
     category: "maison",
     priceFrom: 300,
@@ -181,6 +280,13 @@ export const products: Product[] = [
   },
   {
     id: 14,
+    subcategory: "Cuir",
+    details:
+      "Des babouches en cuir tanné dans les cuves de Chouara, à Fès, puis cousues à la main avec une semelle en cuir. Elles prennent la forme du pied avec le temps.",
+    slug: "babouches-en-cuir",
+    material: "Cuir tanné à Chouara",
+    technique: "Couture à la main",
+    care: "Nourrir le cuir avec une crème incolore.",
     name: "Babouches en Cuir",
     category: "maison",
     priceFrom: 160,
@@ -192,6 +298,13 @@ export const products: Product[] = [
   },
   {
     id: 15,
+    subcategory: "Bracelets",
+    details:
+      "Un bracelet en argent massif gravé à la main de motifs berbères et serti de pierres naturelles. Il est fabriqué à Tiznit, la ville de l'argent.",
+    slug: "bracelet-berbere-argent",
+    material: "Argent 925, pierres naturelles",
+    technique: "Gravure à la main",
+    care: "Nettoyer avec un chiffon à argent, éviter l'eau.",
     name: "Bracelet Berbère Argent",
     category: "bijoux",
     priceFrom: 150,
@@ -204,6 +317,13 @@ export const products: Product[] = [
   },
   {
     id: 16,
+    subcategory: "Colliers",
+    details:
+      "Un collier d'ambre naturel du Souss, avec des perles gravées à la main. Il est porté traditionnellement lors des mariages.",
+    slug: "collier-ambre-traditionnel",
+    material: "Ambre naturel",
+    technique: "Perles gravées à la main",
+    care: "Éviter le parfum et l'eau ; ranger à l'abri de la lumière.",
     name: "Collier Ambre Traditionnel",
     category: "bijoux",
     priceFrom: 200,
@@ -216,6 +336,13 @@ export const products: Product[] = [
   },
   {
     id: 17,
+    subcategory: "Fibules",
+    details:
+      "La tizerzai est la fibule triangulaire des femmes amazighes, qui servait à fermer le drapé. Celle-ci est en argent, avec de l'émail et du filigrane.",
+    slug: "fibule-de-tiznit",
+    material: "Argent, émail",
+    technique: "Filigrane et émail",
+    care: "Nettoyer avec un chiffon à argent.",
     name: "Fibule de Tiznit",
     category: "bijoux",
     priceFrom: 260,
@@ -226,3 +353,10 @@ export const products: Product[] = [
     colors: ["#C9C4BA", "#17654F"],
   },
 ];
+
+export const getProduct = (slug: string) => products.find((p) => p.slug === slug);
+
+/** Categories that have their own page, without the « Tout » entry. */
+export const shopCategories = categories.filter(
+  (c): c is { id: Exclude<Category, "tous">; label: string; arabic: string } => c.id !== "tous",
+);

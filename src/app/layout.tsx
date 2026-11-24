@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Instrument_Serif, Manrope, Noto_Sans_Tifinagh, Amiri } from "next/font/google";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
 import "./globals.css";
 
 const instrument = Instrument_Serif({
@@ -31,7 +33,10 @@ const amiri = Amiri({
 });
 
 export const metadata: Metadata = {
-  title: "Artizana — L'artisanat marocain authentique",
+  title: {
+    default: "Artizana — L'artisanat marocain authentique",
+    template: "%s — Artizana",
+  },
   description:
     "Zellige de Fès, tapis de l'Atlas, poteries de Safi et de Tamegroute, argent de Tiznit : des pièces faites à la main par plus de cinquante maâlems marocains. Composez votre propre zellige en ligne.",
   keywords: [
@@ -64,7 +69,12 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr" className={`${instrument.variable} ${manrope.variable} ${tifinagh.variable} ${amiri.variable}`}>
-      <body className="min-h-screen antialiased">{children}</body>
+      <body className="min-h-screen antialiased">
+        <div className="grain" aria-hidden="true" />
+        <Navbar />
+        <main>{children}</main>
+        <Footer />
+      </body>
     </html>
   );
 }

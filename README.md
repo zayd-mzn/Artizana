@@ -91,7 +91,7 @@ The fonts in `brand/fonts/` are under the SIL Open Font License.
 - **Products:** `src/data/products.ts`. Each product picks a generative `art` variant and two
   `colors`. Replace these with photos when the shop has them.
 - **Crafts (Les Métiers):** `src/data/crafts.ts`.
-- **WhatsApp number:** `src/lib/whatsapp.ts`. It is still the v1 placeholder `212600000000`.
+- **WhatsApp number:** `src/lib/whatsapp.ts` (and the displayed phone in `src/data/site.ts`).
 - **Page title, description, social image:** `metadata` in `src/app/layout.tsx`.
 
 ## Deployment
